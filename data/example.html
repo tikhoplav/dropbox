@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload example</title>
+</head>
+<body>
+  <div class="card">
+    <h1>Dropbox</h1>
+    <div id="result"></div>
+    <input id="path" type="text">
+    <input id="file" type="file"/>
+  </div>
+
+  <script>
+    const result = document.querySelector('#result');
+
+    // Path could be hardcoded in the FE app, like `images`, when file like
+    // 'cat.png' is uploaded the path would be a folder where file is stored,
+    // in this example - `images/cat.png`
+    let path = '/'
+
+    const pathInput = document.querySelector('#path')
+    pathInput.onchange = (e) => {
+      path = e.target.value
+    }
+
+    // When file is selected onChange event is fired,
+    // this could be much easier with React.
+    const fileInput = document.querySelector('#file');
+    fileInput.onchange = async e => {
+      const [file] = e.target.files
+      console.log(file)
+      
+      const response = await fetch(path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+          'File-name': file.name,
+        },
+        body: file
+      })
+
+      if (!response.status === 200) {
+        console.log("Failed to upload a file", response.statusText)
+      }
+
+      // No errors meaning that file is uploaded, the name of the file
+      // is returned with response
+      const fileName = await response.text()
+      result.textContent = `Filed is uploaded: ${fileName}`
+    }
+  </script>
+</body>
+</html>
