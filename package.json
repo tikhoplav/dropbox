@@ -1,0 +1,12 @@
+{
+  "name": "dropbox",
+  "version": "0.0.1",
+  "description": "Webserver for storing and sharing files",
+  "main": "index.js",
+  "repository": "https://github.com/tikhoplav/dropbox",
+  "author": "Vitaly Tikhoplav",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
