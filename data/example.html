@@ -32,15 +32,12 @@
     const fileInput = document.querySelector('#file');
     fileInput.onchange = async e => {
       const [file] = e.target.files
-      console.log(file)
+      const data = new FormData()
+      data.append('file', file)
       
       const response = await fetch(path, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/octet-stream',
-          'File-name': file.name,
-        },
-        body: file
+        body: data
       })
 
       if (!response.status === 200) {
@@ -49,8 +46,7 @@
 
       // No errors meaning that file is uploaded, the name of the file
       // is returned with response
-      const fileName = await response.text()
-      result.textContent = `Filed is uploaded: ${fileName}`
+      window.open(path, '_self')
     }
   </script>
 </body>

@@ -17,14 +17,7 @@ In general **Dropbox** act as a simple remote hard drive folder
 which can be used to store files with any subfolder structure.  
 When `POST` request is done, **Dropbox** uses the request path  
 as a path to a folder where file should be placed, all nested  
-folders will be created automatically. 
-
-In addition to regular file uploads, **Dropbox** support stream  
-upload as well. In this case name of the file must be provided  
-with a custom HTTP header `File-Name`. An example can be found  
-in `/data/example.html` file:
-
-![image](https://user-images.githubusercontent.com/62797411/210887650-e90a050c-0c3c-4d2c-9928-3c65e001c182.png)
+folders will be created automatically.
 
 <br>
 
