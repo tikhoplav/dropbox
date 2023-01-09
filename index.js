@@ -10,10 +10,6 @@ app.post('*', (req, res) => {
   // Prepare a folder to write a file, if folder exists nothing will happen.
   fs.mkdirSync(`/data${path}`, { recursive: true })
 
-  res.set({
-    'Access-Control-Allow-Origin': '*'
-  })
-
   // Handle form requests with the `Content-type` header set to
   // `multipart/form-data` or `application/x-www-form-urlencoded`.
   const bb = busboy({
