@@ -5,18 +5,54 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload example</title>
+  <style type="text/css">
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      background: #2c2c2c;
+      overflow: hidden;
+      font-family: 'monospace';
+    }
+
+    .card {
+      display: flex;
+      flex-flow: column nowrap;
+      max-width: 360px;
+      width: 100%;
+      border-radius: 1rem;
+      background: #3f3f3f;
+      padding: 1.6rem;
+      color: white;
+    }
+
+    #path {
+      background: transparent;
+      padding: 0.6rem 0;
+      outline: none;
+      border: none;
+      border-bottom: 1px solid #ffffff30;
+      font-size: 1rem;
+      font-weight: 300;
+      font-style: italic;
+      color: #dadada;
+      margin-bottom: 1.2rem;
+    }
+  </style>
 </head>
 <body>
   <div class="card">
-    <h1>Dropbox</h1>
-    <div id="result"></div>
-    <input id="path" type="text">
+    <h2>Dropbox</h2>
+    <input id="path" type="text" placeholder="Set full path and name of the file">
     <input id="file" type="file"/>
   </div>
 
   <script>
-    const result = document.querySelector('#result');
-
     // Path could be hardcoded in the FE app, like `images`, when file like
     // 'cat.png' is uploaded the path would be a folder where file is stored,
     // in this example - `images/cat.png`
@@ -44,9 +80,11 @@
         console.log("Failed to upload a file", response.statusText)
       }
 
+      console.log(response)
+
       // No errors meaning that file is uploaded, the name of the file
       // is returned with response
-      window.open(path, '_self')
+      // window.open(path, '_self')
     }
   </script>
 </body>
