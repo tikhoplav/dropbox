@@ -7,5 +7,7 @@
 - [] Add verbose errors for upload;
 - [] Add `PATCH` handler;
 - [] Add `PUT` handler;
-- [] Add remove handler;
+- [] Add `DELETE` handler;
+- [] Add `HEAD` handler ?;
 - [] Add multi-threading ?;
+- [] Add ETAG ?;

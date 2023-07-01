@@ -120,7 +120,7 @@ async fn handle_upload(path_raw: FullPath, form: FormData) -> Result<impl Reply,
         }
     }
 
-    Ok(warp::reply::with_status("ok", StatusCode::CREATED))
+    Ok(warp::reply::with_status("ok", StatusCode::OK))
 }
 
 async fn handle_put(_path: FullPath, _form: FormData) -> Result<impl Reply, Rejection> {
