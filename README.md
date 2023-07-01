@@ -1,6 +1,11 @@
 # Dropbox
 
 ## TODO in `v1.0.0`:
-- [] Add health check route;
-- [] Add multipart form upload handler;
+- [x] Add health check route;
+- [x] Add `OPTION` handler;
+- [x] Add multipart form upload handler;
+- [] Add verbose errors for upload;
+- [] Add `PATCH` handler;
+- [] Add `PUT` handler;
 - [] Add remove handler;
+- [] Add multi-threading ?;
