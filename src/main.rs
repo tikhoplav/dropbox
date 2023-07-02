@@ -29,7 +29,10 @@ use futures_util::{
 
 #[tokio::main]
 async fn main() {    
-    let status = warp::path::end().and_then(handle_status);
+    let status = warp::get()
+        .and(warp::path::end())
+        .and_then(handle_status);
+
     let options = warp::options().and_then(handle_status);
 
     let upload = warp::post()
