@@ -22,6 +22,7 @@ use warp::{
     }
 };
 use std::convert::Infallible;
+use std::io::ErrorKind;
 use futures_util::{
     TryStreamExt,
     StreamExt,
@@ -94,7 +95,10 @@ async fn handle_upload(path_raw: FullPath, form: FormData) -> Result<impl Reply,
 
     match std::fs::create_dir_all(path.clone()) {
         Ok(()) => {},
-        Err(err) => panic!("{}", err),
+        Err(err) => {
+            let msg = format!("Failed to create a folder: {}\n", err);
+            return Ok(warp::reply::with_status(msg, StatusCode::INTERNAL_SERVER_ERROR));
+        }
     };
 
     let mut parts = form.into_stream();
@@ -104,38 +108,59 @@ async fn handle_upload(path_raw: FullPath, form: FormData) -> Result<impl Reply,
                 let filename = part.name();
                 let filepath = format!("{}/{}", path, filename);
 
-                let data = part
+                let data = match part
                     .stream()
                     .try_fold(Vec::new(), |mut acc, buf| async move {
                         acc.extend_from_slice(buf.chunk());
                         Ok(acc)
                     })
-                    .await.expect("folding error");
+                    .await
+                {
+                    Ok(data) => data,
+                    Err(err) => {
+                        let msg = format!("Failed to read data from a part: {}\n", err.to_string());
+                        return Ok(warp::reply::with_status(msg, StatusCode::INTERNAL_SERVER_ERROR));
+                    }
+                };
 
                 match std::fs::write(filepath, data) {
                     Ok(()) => (),
-                    Err(err) => panic!("{}", err),
+                    Err(err) => {
+                        let msg = format!("Failed to write file: {}\n", err.to_string());
+                        return Ok(warp::reply::with_status(msg, StatusCode::INTERNAL_SERVER_ERROR));
+                    }
                 };
             },
             Err(err) => {
-                panic!("{}", err);
+                let msg = format!("Failed to read a part: {}\n", err.to_string());
+                return Ok(warp::reply::with_status(msg, StatusCode::INTERNAL_SERVER_ERROR));
             },
         }
     }
 
-    Ok(warp::reply::with_status("ok", StatusCode::OK))
+    Ok(warp::reply::with_status("ok\n".to_string(), StatusCode::OK))
 }
 
 async fn handle_put(_path: FullPath, _form: FormData) -> Result<impl Reply, Rejection> {
-    Ok(warp::reply::with_status("not implemented", StatusCode::NOT_IMPLEMENTED))
+    Ok(warp::reply::with_status("not implemented\n", StatusCode::NOT_IMPLEMENTED))
 }
 
 async fn handle_patch(_path: FullPath, _form: FormData) -> Result<impl Reply, Rejection> {
-    Ok(warp::reply::with_status("not implemented", StatusCode::NOT_IMPLEMENTED))
+    Ok(warp::reply::with_status("not implemented\n", StatusCode::NOT_IMPLEMENTED))
 }
 
-async fn handle_remove(_path: FullPath) -> Result<impl Reply, Rejection> {
-    Ok(warp::reply::with_status("not implemented", StatusCode::NOT_IMPLEMENTED))
+async fn handle_remove(path: FullPath) -> Result<impl Reply, Rejection> {
+    let filepath = format!("/data/{}", path.as_str());
+    match std::fs::remove_file(filepath) {
+        Ok(()) => Ok(warp::reply::with_status("ok\n".to_string(), StatusCode::NO_CONTENT)),
+        Err(err) if err.kind() == ErrorKind::NotFound => {
+            Ok(warp::reply::with_status("not found\n".to_string(), StatusCode::NOT_FOUND))
+        },
+        Err(err) => {
+            let msg = format!("Failed to remove file: {}\n", err.to_string());
+            Ok(warp::reply::with_status(msg, StatusCode::INTERNAL_SERVER_ERROR))
+        }
+    }
 }
 
 async fn handle_reject(err: Rejection) -> std::result::Result<impl Reply, Infallible> {
