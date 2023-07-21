@@ -41,16 +41,6 @@ async fn main() {
         .and(warp::multipart::form().max_length(20_000_000))
         .and_then(handle_upload);
 
-    let put = warp::put()
-        .and(warp::path::full())
-        .and(warp::multipart::form().max_length(20_000_000))
-        .and_then(handle_put);
-
-    let patch = warp::patch()
-        .and(warp::path::full())
-        .and(warp::multipart::form().max_length(20_000_000))
-        .and_then(handle_patch);
-
     let remove = warp::delete()
         .and(warp::path::full())
         .and_then(handle_remove);
