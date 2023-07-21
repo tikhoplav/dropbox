@@ -73,8 +73,6 @@ async fn main() {
         .or(status)
         .or(serve)
         .or(upload)
-        .or(put)
-        .or(patch)
         .or(remove)
         .with(warp::reply::with::headers(headers))
         .recover(handle_reject);
@@ -139,14 +137,6 @@ async fn handle_upload(path_raw: FullPath, form: FormData) -> Result<impl Reply,
     }
 
     Ok(warp::reply::with_status("ok\n".to_string(), StatusCode::OK))
-}
-
-async fn handle_put(_path: FullPath, _form: FormData) -> Result<impl Reply, Rejection> {
-    Ok(warp::reply::with_status("not implemented\n", StatusCode::NOT_IMPLEMENTED))
-}
-
-async fn handle_patch(_path: FullPath, _form: FormData) -> Result<impl Reply, Rejection> {
-    Ok(warp::reply::with_status("not implemented\n", StatusCode::NOT_IMPLEMENTED))
 }
 
 async fn handle_remove(path: FullPath) -> Result<impl Reply, Rejection> {
